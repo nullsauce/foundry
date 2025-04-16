@@ -217,7 +217,7 @@ pub struct ScriptArgs {
     #[command(flatten)]
     pub retry: RetryArgs,
 
-    /// Catch all for args passed after `--`
+    /// Catches all args passed after `--`
     #[arg(last = true)]
     extra_args: Vec<String>,
 }

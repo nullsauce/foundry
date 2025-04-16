@@ -5951,7 +5951,7 @@
     {
       "func": {
         "id": "getCommandArgs",
-        "description": "",
+        "description": "Returns all command-line arguments passed after `--` when invoking a script.\nReturns an empty array when called within other contexts.",
         "declaration": "function getCommandArgs() external returns (string[] memory args);",
         "visibility": "external",
         "mutability": "",
