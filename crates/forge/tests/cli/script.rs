@@ -2291,6 +2291,57 @@ Script ran successfully.
 "#]]);
 });
 
+
+forgetest_init!(can_get_command_args, |prj, cmd| {
+    let script = prj
+        .add_source(
+            "Foo",
+            r#"
+import "forge-std/Script.sol";
+
+interface Vm {
+    function getCommandArgs() external returns (string[] memory args);
+}
+
+contract CommandArgsScript is Script {
+    function run() public {
+        string[] memory args = Vm(address(vm)).getCommandArgs();
+        console.log(args.length);
+        console.log(args[0]);
+        console.log(args[1]);
+        console.log(args[2]);
+    }
+}"#,
+        )
+        .unwrap();
+    cmd.arg("script")
+        .arg(script)
+        .args([
+            "--private-key",
+            "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6",
+            "-v",
+            "--",
+            "foo",
+            "--bar",
+            "42"
+        ])
+        .assert_success()
+        .stdout_eq(str![[r#"
+[COMPILING_FILES] with [SOLC_VERSION]
+[SOLC_VERSION] [ELAPSED]
+Compiler run successful!
+Script ran successfully.
+[GAS]
+
+== Logs ==
+  3
+  foo
+  --bar
+  42
+
+"#]]);
+});
+
 forgetest_init!(can_remeber_keys, |prj, cmd| {
     let script = prj
         .add_source(
@@ -2576,13 +2627,13 @@ Chain 31337
 accessList           []
 chainId              31337
 gasLimit             228247
-gasPrice             
+gasPrice
 input                [..]
-maxFeePerBlobGas     
-maxFeePerGas         
-maxPriorityFeePerGas 
+maxFeePerBlobGas
+maxFeePerGas
+maxPriorityFeePerGas
 nonce                0
-to                   
+to
 type                 0
 value                0
 
@@ -2591,11 +2642,11 @@ value                0
 accessList           []
 chainId              31337
 gasLimit             93856
-gasPrice             
+gasPrice
 input                0x7357f5d2000000000000000000000000000000000000000000000000000000000000007b00000000000000000000000000000000000000000000000000000000000001c8
-maxFeePerBlobGas     
-maxFeePerGas         
-maxPriorityFeePerGas 
+maxFeePerBlobGas
+maxFeePerGas
+maxPriorityFeePerGas
 nonce                1
 to                   0x5FbDB2315678afecb367f032d93F642f64180aa3
 type                 0

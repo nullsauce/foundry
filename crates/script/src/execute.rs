@@ -108,6 +108,7 @@ impl PreExecutionState {
                 self.script_wallets.clone(),
                 self.args.debug,
                 self.build_data.build_data.target.clone(),
+                self.args.extra_args.clone(),
             )
             .await?;
         let result = self.execute_with_runner(&mut runner).await?;

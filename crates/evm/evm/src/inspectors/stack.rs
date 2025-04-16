@@ -61,6 +61,8 @@ pub struct InspectorStackBuilder {
     pub wallets: Option<Wallets>,
     /// The CREATE2 deployer address.
     pub create2_deployer: Address,
+    /// Command-line args
+    pub cmd_args: Option<Vec<String>>,
 }
 
 impl InspectorStackBuilder {
@@ -164,6 +166,12 @@ impl InspectorStackBuilder {
         self
     }
 
+    #[inline]
+    pub fn cmd_args(mut self, cmd_args: Vec<String>) -> Self {
+        self.cmd_args = Some(cmd_args);
+        self
+    }
+
     /// Builds the stack of inspectors to use when transacting/committing on the EVM.
     pub fn build(self) -> InspectorStack {
         let Self {
@@ -180,6 +188,7 @@ impl InspectorStackBuilder {
             odyssey,
             wallets,
             create2_deployer,
+            cmd_args,
         } = self;
         let mut stack = InspectorStack::new();
 
@@ -189,6 +198,10 @@ impl InspectorStackBuilder {
             // Set wallets if they are provided
             if let Some(wallets) = wallets {
                 cheatcodes.set_wallets(wallets);
+            }
+            // Set command-line args if they are provided
+            if let Some(cmd_args) = cmd_args {
+                cheatcodes.set_cmd_args(cmd_args);
             }
             stack.set_cheatcodes(cheatcodes);
         }
@@ -508,9 +521,9 @@ impl InspectorStackRefMut<'_> {
 
                 // If the inspector returns a different status or a revert with a non-empty message,
                 // we assume it wants to tell us something
-                let different = new_outcome.result.result != result ||
-                    (new_outcome.result.result == InstructionResult::Revert &&
-                        new_outcome.output() != outcome.output());
+                let different = new_outcome.result.result != result
+                    || (new_outcome.result.result == InstructionResult::Revert
+                        && new_outcome.output() != outcome.output());
                 different.then_some(new_outcome)
             },
         );
@@ -533,9 +546,9 @@ impl InspectorStackRefMut<'_> {
 
                 // If the inspector returns a different status or a revert with a non-empty message,
                 // we assume it wants to tell us something
-                let different = new_outcome.result.result != result ||
-                    (new_outcome.result.result == InstructionResult::Revert &&
-                        new_outcome.output() != outcome.output());
+                let different = new_outcome.result.result != result
+                    || (new_outcome.result.result == InstructionResult::Revert
+                        && new_outcome.output() != outcome.output());
                 different.then_some(new_outcome)
             },
         );
@@ -558,9 +571,9 @@ impl InspectorStackRefMut<'_> {
 
                 // If the inspector returns a different status or a revert with a non-empty message,
                 // we assume it wants to tell us something
-                let different = new_outcome.result.result != result ||
-                    (new_outcome.result.result == InstructionResult::Revert &&
-                        new_outcome.output() != outcome.output());
+                let different = new_outcome.result.result != result
+                    || (new_outcome.result.result == InstructionResult::Revert
+                        && new_outcome.output() != outcome.output());
                 different.then_some(new_outcome)
             },
         );
@@ -650,12 +663,12 @@ impl InspectorStackRefMut<'_> {
         for (addr, mut acc) in res.state {
             let Some(acc_mut) = ecx.journaled_state.state.get_mut(&addr) else {
                 ecx.journaled_state.state.insert(addr, acc);
-                continue
+                continue;
             };
 
             // make sure accounts that were warmed earlier do not become cold
-            if acc.status.contains(AccountStatus::Cold) &&
-                !acc_mut.status.contains(AccountStatus::Cold)
+            if acc.status.contains(AccountStatus::Cold)
+                && !acc_mut.status.contains(AccountStatus::Cold)
             {
                 acc.status -= AccountStatus::Cold;
             }
@@ -665,7 +678,7 @@ impl InspectorStackRefMut<'_> {
             for (key, val) in acc.storage {
                 let Some(slot_mut) = acc_mut.storage.get_mut(&key) else {
                     acc_mut.storage.insert(key, val);
-                    continue
+                    continue;
                 };
                 slot_mut.present_value = val.present_value;
                 slot_mut.is_cold &= val.is_cold;
@@ -698,10 +711,12 @@ impl InspectorStackRefMut<'_> {
     /// it.
     fn with_stack<O>(&mut self, f: impl FnOnce(&mut InspectorStack) -> O) -> O {
         let mut stack = InspectorStack {
-            cheatcodes: self
-                .cheatcodes
-                .as_deref_mut()
-                .map(|cheats| core::mem::replace(cheats, Cheatcodes::new(cheats.config.clone()))),
+            cheatcodes: self.cheatcodes.as_deref_mut().map(|cheats| {
+                core::mem::replace(
+                    cheats,
+                    Cheatcodes::new(cheats.config.clone()),
+                )
+            }),
             inner: std::mem::take(self.inner),
         };
 
@@ -933,10 +948,10 @@ impl Inspector<&mut dyn DatabaseExt> for InspectorStackRefMut<'_> {
             |inspector| inspector.create(ecx, create).map(Some),
         );
 
-        if !matches!(create.scheme, CreateScheme::Create2 { .. }) &&
-            self.enable_isolation &&
-            !self.in_inner_context &&
-            ecx.journaled_state.depth == 1
+        if !matches!(create.scheme, CreateScheme::Create2 { .. })
+            && self.enable_isolation
+            && !self.in_inner_context
+            && ecx.journaled_state.depth == 1
         {
             let (result, address) = self.transact_inner(
                 ecx,
@@ -993,10 +1008,10 @@ impl Inspector<&mut dyn DatabaseExt> for InspectorStackRefMut<'_> {
             |inspector| inspector.eofcreate(ecx, create).map(Some),
         );
 
-        if matches!(create.kind, EOFCreateKind::Tx { .. }) &&
-            self.enable_isolation &&
-            !self.in_inner_context &&
-            ecx.journaled_state.depth == 1
+        if matches!(create.kind, EOFCreateKind::Tx { .. })
+            && self.enable_isolation
+            && !self.in_inner_context
+            && ecx.journaled_state.depth == 1
         {
             let init_code = match &mut create.kind {
                 EOFCreateKind::Tx { initdata } => initdata.clone(),

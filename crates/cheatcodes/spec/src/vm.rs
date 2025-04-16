@@ -2220,6 +2220,9 @@ interface Vm {
     #[cheatcode(group = Scripting)]
     function getWallets() external returns (address[] memory wallets);
 
+    #[cheatcode(group = Scripting)]
+    function getCommandArgs() external returns (string[] memory args);
+
     // ======== Utilities ========
 
     // -------- Strings --------

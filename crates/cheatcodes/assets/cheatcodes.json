@@ -5950,6 +5950,26 @@
     },
     {
       "func": {
+        "id": "getCommandArgs",
+        "description": "",
+        "declaration": "function getCommandArgs() external returns (string[] memory args);",
+        "visibility": "external",
+        "mutability": "",
+        "signature": "getCommandArgs()",
+        "selector": "0x72482160",
+        "selectorBytes": [
+          114,
+          72,
+          33,
+          96
+        ]
+      },
+      "group": "scripting",
+      "status": "stable",
+      "safety": "safe"
+    },
+    {
+      "func": {
         "id": "getDeployedCode",
         "description": "Gets the deployed bytecode from an artifact file. Takes in the relative path to the json file or the path to the\nartifact in the form of <path>:<contract>:<version> where <contract> and <version> parts are optional.",
         "declaration": "function getDeployedCode(string calldata artifactPath) external view returns (bytes memory runtimeBytecode);",
