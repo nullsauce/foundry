@@ -2220,6 +2220,11 @@ interface Vm {
     #[cheatcode(group = Scripting)]
     function getWallets() external returns (address[] memory wallets);
 
+    /// Returns all command-line arguments passed after `--` when invoking a script.
+    /// Returns an empty array when called within other contexts.
+    #[cheatcode(group = Scripting)]
+    function getScriptArgs() external returns (string[] memory args);
+
     // ======== Utilities ========
 
     // -------- Strings --------

@@ -216,6 +216,10 @@ pub struct ScriptArgs {
 
     #[command(flatten)]
     pub retry: RetryArgs,
+
+    /// Catches all args passed after `--`
+    #[arg(last = true)]
+    extra_args: Vec<String>,
 }
 
 impl ScriptArgs {
@@ -576,7 +580,7 @@ impl ScriptConfig {
     }
 
     async fn get_runner(&mut self) -> Result<ScriptRunner> {
-        self._get_runner(None, false).await
+        self._get_runner(None, false, vec![]).await
     }
 
     async fn get_runner_with_cheatcodes(
@@ -585,14 +589,16 @@ impl ScriptConfig {
         script_wallets: Wallets,
         debug: bool,
         target: ArtifactId,
+        extra_args: Vec<String>,
     ) -> Result<ScriptRunner> {
-        self._get_runner(Some((known_contracts, script_wallets, target)), debug).await
+        self._get_runner(Some((known_contracts, script_wallets, target)), debug, extra_args).await
     }
 
     async fn _get_runner(
         &mut self,
         cheats_data: Option<(ContractsByArtifact, Wallets, ArtifactId)>,
         debug: bool,
+        extra_args: Vec<String>,
     ) -> Result<ScriptRunner> {
         trace!("preparing script runner");
         let env = self.evm_opts.evm_env().await?;
@@ -621,6 +627,7 @@ impl ScriptConfig {
                     .trace_mode(if debug { TraceMode::Debug } else { TraceMode::Call })
                     .odyssey(self.evm_opts.odyssey)
                     .create2_deployer(self.evm_opts.create2_deployer)
+                    .script_args(extra_args)
             })
             .spec_id(self.config.evm_spec_id())
             .gas_limit(self.evm_opts.gas_limit())

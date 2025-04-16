@@ -6190,6 +6190,26 @@
     },
     {
       "func": {
+        "id": "getScriptArgs",
+        "description": "Returns all command-line arguments passed after `--` when invoking a script.\nReturns an empty array when called within other contexts.",
+        "declaration": "function getScriptArgs() external returns (string[] memory args);",
+        "visibility": "external",
+        "mutability": "",
+        "signature": "getScriptArgs()",
+        "selector": "0x8639c293",
+        "selectorBytes": [
+          134,
+          57,
+          194,
+          147
+        ]
+      },
+      "group": "scripting",
+      "status": "stable",
+      "safety": "safe"
+    },
+    {
+      "func": {
         "id": "getStateDiff",
         "description": "Returns state diffs from current `vm.startStateDiffRecording` session.",
         "declaration": "function getStateDiff() external view returns (string memory diff);",

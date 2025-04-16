@@ -172,6 +172,16 @@ impl Cheatcode for getWalletsCall {
     }
 }
 
+impl Cheatcode for getScriptArgsCall {
+    fn apply_stateful(&self, ccx: &mut CheatsCtxt) -> Result {
+        ccx.state
+            .script_args
+            .as_ref()
+            .ok_or_else(|| fmt_err!("no command-line args"))
+            .map(SolValue::abi_encode)
+    }
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct Broadcast {
     /// Address of the transaction origin
