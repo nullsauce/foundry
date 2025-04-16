@@ -2223,7 +2223,7 @@ interface Vm {
     /// Returns all command-line arguments passed after `--` when invoking a script.
     /// Returns an empty array when called within other contexts.
     #[cheatcode(group = Scripting)]
-    function getCommandArgs() external returns (string[] memory args);
+    function getScriptArgs() external returns (string[] memory args);
 
     // ======== Utilities ========
 

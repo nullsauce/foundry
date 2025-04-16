@@ -172,10 +172,10 @@ impl Cheatcode for getWalletsCall {
     }
 }
 
-impl Cheatcode for getCommandArgsCall {
+impl Cheatcode for getScriptArgsCall {
     fn apply_stateful(&self, ccx: &mut CheatsCtxt) -> Result {
         ccx.state
-            .cmd_args
+            .script_args
             .as_ref()
             .ok_or_else(|| fmt_err!("no command-line args"))
             .map(SolValue::abi_encode)

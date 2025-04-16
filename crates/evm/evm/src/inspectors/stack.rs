@@ -61,8 +61,8 @@ pub struct InspectorStackBuilder {
     pub wallets: Option<Wallets>,
     /// The CREATE2 deployer address.
     pub create2_deployer: Address,
-    /// Command-line args
-    pub cmd_args: Option<Vec<String>>,
+    /// User-specified script arguments
+    pub script_args: Option<Vec<String>>,
 }
 
 impl InspectorStackBuilder {
@@ -167,8 +167,8 @@ impl InspectorStackBuilder {
     }
 
     #[inline]
-    pub fn cmd_args(mut self, cmd_args: Vec<String>) -> Self {
-        self.cmd_args = Some(cmd_args);
+    pub fn script_args(mut self, script_args: Vec<String>) -> Self {
+        self.script_args = Some(script_args);
         self
     }
 
@@ -188,7 +188,7 @@ impl InspectorStackBuilder {
             odyssey,
             wallets,
             create2_deployer,
-            cmd_args,
+            script_args,
         } = self;
         let mut stack = InspectorStack::new();
 
@@ -200,8 +200,8 @@ impl InspectorStackBuilder {
                 cheatcodes.set_wallets(wallets);
             }
             // Set command-line args if they are provided
-            if let Some(cmd_args) = cmd_args {
-                cheatcodes.set_cmd_args(cmd_args);
+            if let Some(script_args) = script_args {
+                cheatcodes.set_script_args(script_args);
             }
             stack.set_cheatcodes(cheatcodes);
         }

@@ -5950,26 +5950,6 @@
     },
     {
       "func": {
-        "id": "getCommandArgs",
-        "description": "Returns all command-line arguments passed after `--` when invoking a script.\nReturns an empty array when called within other contexts.",
-        "declaration": "function getCommandArgs() external returns (string[] memory args);",
-        "visibility": "external",
-        "mutability": "",
-        "signature": "getCommandArgs()",
-        "selector": "0x72482160",
-        "selectorBytes": [
-          114,
-          72,
-          33,
-          96
-        ]
-      },
-      "group": "scripting",
-      "status": "stable",
-      "safety": "safe"
-    },
-    {
-      "func": {
         "id": "getDeployedCode",
         "description": "Gets the deployed bytecode from an artifact file. Takes in the relative path to the json file or the path to the\nartifact in the form of <path>:<contract>:<version> where <contract> and <version> parts are optional.",
         "declaration": "function getDeployedCode(string calldata artifactPath) external view returns (bytes memory runtimeBytecode);",
@@ -6205,6 +6185,26 @@
         ]
       },
       "group": "evm",
+      "status": "stable",
+      "safety": "safe"
+    },
+    {
+      "func": {
+        "id": "getScriptArgs",
+        "description": "Returns all command-line arguments passed after `--` when invoking a script.\nReturns an empty array when called within other contexts.",
+        "declaration": "function getScriptArgs() external returns (string[] memory args);",
+        "visibility": "external",
+        "mutability": "",
+        "signature": "getScriptArgs()",
+        "selector": "0x8639c293",
+        "selectorBytes": [
+          134,
+          57,
+          194,
+          147
+        ]
+      },
+      "group": "scripting",
       "status": "stable",
       "safety": "safe"
     },

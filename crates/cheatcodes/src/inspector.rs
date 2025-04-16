@@ -507,8 +507,8 @@ pub struct Cheatcodes {
     /// Unlocked wallets used in scripts and testing of scripts.
     pub wallets: Option<Wallets>,
 
-    /// Command-line args
-    pub cmd_args: Option<Vec<String>>,
+    /// User-specified script arguments
+    pub script_args: Option<Vec<String>>,
 }
 
 // This is not derived because calling this in `fn new` with `..Default::default()` creates a second
@@ -561,7 +561,7 @@ impl Cheatcodes {
             arbitrary_storage: Default::default(),
             deprecated: Default::default(),
             wallets: Default::default(),
-            cmd_args: Default::default(),
+            script_args: Default::default(),
         }
     }
 
@@ -583,8 +583,8 @@ impl Cheatcodes {
     }
 
     /// Sets the command-line arguments
-    pub fn set_cmd_args(&mut self, cmd_args: Vec<String>) {
-        self.cmd_args = Some(cmd_args);
+    pub fn set_script_args(&mut self, script_args: Vec<String>) {
+        self.script_args = Some(script_args);
     }
 
     /// Decodes the input data and applies the cheatcode.

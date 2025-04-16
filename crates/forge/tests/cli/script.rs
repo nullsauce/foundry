@@ -2292,7 +2292,7 @@ Script ran successfully.
 });
 
 
-forgetest_init!(can_get_command_args, |prj, cmd| {
+forgetest_init!(can_get_script_args, |prj, cmd| {
     let script = prj
         .add_source(
             "Foo",
@@ -2300,12 +2300,12 @@ forgetest_init!(can_get_command_args, |prj, cmd| {
 import "forge-std/Script.sol";
 
 interface Vm {
-    function getCommandArgs() external returns (string[] memory args);
+    function getScriptArgs() external returns (string[] memory args);
 }
 
-contract CommandArgsScript is Script {
+contract ScriptArgsScript is Script {
     function run() public {
-        string[] memory args = Vm(address(vm)).getCommandArgs();
+        string[] memory args = Vm(address(vm)).getScriptArgs();
         console.log(args.length);
         console.log(args[0]);
         console.log(args[1]);
@@ -2323,7 +2323,7 @@ contract CommandArgsScript is Script {
             "--",
             "foo",
             "--bar",
-            "42"
+            "42",
         ])
         .assert_success()
         .stdout_eq(str![[r#"
